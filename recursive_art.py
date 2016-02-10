@@ -32,9 +32,16 @@ def evaluate_random_function(f, x, y):
         -0.5
         >>> evaluate_random_function(["y"],0.1,0.02)
         0.02
+        >>> evaluate_random_function(['z'], 3.5, 1.2)
+        inputs must be either x or y
     """
-    # TODO: implement this
-    pass
+    if f[0] == 'x':
+        return x
+    elif f[0] == 'y':
+        return y
+    else: 
+        print 'inputs must be either x or y'
+        return None
 
 
 def remap_interval(val,
@@ -64,8 +71,15 @@ def remap_interval(val,
         >>> remap_interval(5, 4, 6, 1, 2)
         1.5
     """
-    # TODO: implement this
-    pass
+
+    #the floats below ensure we avoid weird integer math mistakes
+    a = float(val- input_interval_start)
+    b = float(input_interval_end - input_interval_start)
+    c = float(output_interval_end - output_interval_start)
+    ratio = c*(a/b)
+    return ratio + output_interval_start
+
+print remap_interval(5, 1, 7, 0, 2)
 
 
 def color_map(val):
@@ -138,13 +152,13 @@ def generate_art(filename, x_size=350, y_size=350):
 
 if __name__ == '__main__':
     import doctest
-    doctest.testmod()
+    doctest.run_docstring_examples(evaluate_random_function, globals())
 
     # Create some computational art!
     # TODO: Un-comment the generate_art function call after you
     #       implement remap_interval and evaluate_random_function
-    # generate_art("myart.png")
+    generate_art("myart.png")
 
     # Test that PIL is installed correctly
     # TODO: Comment or remove this function call after testing PIL install
-    test_image("noise.png")
+    #test_image("noise.png")

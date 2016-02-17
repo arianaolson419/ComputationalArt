@@ -16,29 +16,41 @@ def build_random_function(min_depth, max_depth):
                  (see assignment writeup for details on the representation of
                  these functions)
     """
+    #using a dictionary/tuple combination allows for easy additions to the functions if I want to later
+    #keys are number of arguments required and values are the elementary functions
     functions = {0:('x', 'y'), 1:('cos_pi', 'sin_pi', 'square'), 2:('prod', 'avg', 'prod_squared')} #sum(a,b) = a+b; square(a) = a**2 
     f = []
+    #base case for depth of 1. The function cannot have any arguments.
     depth = randint(min_depth, max_depth)
-    #while depth >= 1:
     if depth == 1:
         arguments = 0
         elementary = functions[arguments][randint(0, len(functions[arguments])-1)]
         f.append(elementary)
         return f
+    #base case for depth of 2. These functions can only take one argument
     elif depth == 2:
         arguments = 1
-        argument1 = build_random_function(1,arguments)
+        #I chose to use arguments as my max_depth below instead of 1 for readability
+        argument1 = build_random_function(1,arguments)  #chooses a random function that takes no arguments
+        #can chose a random elementary function from the functions that take one argument
         elementary = functions[arguments][randint(0, len(functions[arguments])-1)]
         chunk = [elementary, argument1]
         f.append(chunk)
         return f[0]
+    #random functions with a depth greater than 2 can have either 1 or two arguments
     else:
+        #randomly choses the number of arguments
         arguments = randint(1,2)
+        #by using depth-1 as the max_depth below, this allows the randomly built function to be limited to the
+        #original max_depth 
         argument1 = build_random_function(1,depth-1)
         argument2 = build_random_function(1, depth-1)
+        #choses a function that takes the number of arguments specified
         elementary = functions[arguments][randint(0, len(functions[arguments])-1)]
+    
         if arguments == 2:
             chunk = [elementary, argument1, argument2]
+    
         else:
             chunk = [elementary, argument1]
         f.append(chunk)
@@ -63,6 +75,7 @@ def evaluate_random_function(f, x, y):
         z is not in the list of defined functions
     
     """
+    #by using recursion, evaluating each depth of the function becomes easy
     if f[0] == 'x':
         return x
     elif f[0] == 'y':
@@ -79,6 +92,9 @@ def evaluate_random_function(f, x, y):
         return evaluate_random_function(f[1], x, y)*evaluate_random_function(f[2], x, y)
     elif f[0] == 'prod_squared':
         return (evaluate_random_function(f[1], x, y)*evaluate_random_function(f[2], x, y))**2
+    #I wanted the option to not include colors 
+    elif f[0] == '0':
+        return 0
     else: 
         print f[0], "is not in the list of defined functions"
         return None
@@ -170,9 +186,9 @@ def generate_art(filename, x_size=350, y_size=350):
         x_size, y_size: optional args to set image dimensions (default: 350)
     """
     # Functions for red, green, and blue channels - where the magic happens!
-    red_function = build_random_function(1,3)
-    green_function = build_random_function(3,5)
-    blue_function = build_random_function(5,7)
+    red_function = build_random_function(10,20)
+    green_function = build_random_function(1,1)
+    blue_function = build_random_function(20,25)
 
     # Create image and loop over all pixels
     im = Image.new("RGB", (x_size, y_size))
@@ -197,7 +213,7 @@ if __name__ == '__main__':
     # Create some computational art!
     # TODO: Un-comment the generate_art function call after you
     #       implement remap_interval and evaluate_random_function
-    generate_art("myart.png")
+    generate_art("myart.png", 400, 450)
 
     # Test that PIL is installed correctly
     # TODO: Comment or remove this function call after testing PIL install
